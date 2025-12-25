@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <title>IP-Director-OS | 个人IP全案主编系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-body: #121212;
+            --bg-panel: #1A1A1A;
+            --bg-input: #0D0D0D;
+            --text-main: #E6E6E6;
+            --text-mute: #808080;
+            --accent-orange: #EA4C1D;
+            --accent-green: #2B9348;
+            --accent-blue: #3B82F6;
+            --border-color: #333333;
+            --space-s: 8px;
+            --space-m: 16px;
+            --space-l: 32px;
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        p {
+            margin: 0 0 var(--space-m) 0;
+            color: var(--text-mute);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--space-m);
+            min-height: 100vh;
+            display: grid;
+            grid-template-rows: auto auto 1fr auto;
+            gap: var(--space-l);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: var(--space-m);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-s);
+        }
+
+        .brand-logo {
+            width: 24px;
+            height: 24px;
+            background: var(--accent-orange);
+            border-radius: 2px;
+        }
+
+        nav {
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-item {
+            background: transparent;
+            border: none;
+            color: var(--text-mute);
+            padding: var(--space-s) var(--space-m);
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            border-top: 2px solid transparent;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            color: var(--text-main);
+            border-top: 2px solid var(--accent-orange);
+            background: var(--bg-panel);
+        }
+
+        .nav-item.done {
+            color: var(--accent-green);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            padding: var(--space-l);
+            margin-bottom: var(--space-m);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-l);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: var(--space-s);
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+        }
+
+        .panel-subtitle {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-orange);
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: var(--space-m);
+        }
+
+        label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-mute);
+            margin-bottom: 4px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            border-radius: 2px;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--text-main);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background: var(--border-color);
+            color: var(--text-main);
+            border: none;
+            padding: 10px 20px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 2px;
+            transition: transform 0.1s, filter 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            filter: brightness(0.9);
+        }
+
+        .btn-primary {
+            background: var(--accent-orange);
+            color: #fff;
+        }
+
+        .btn-success {
+            background: var(--accent-green);
+            color: #fff;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+
+        .result-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            padding: var(--space-m);
+            margin: var(--space-m) 0;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .mode-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-m);
+            margin: var(--space-m) 0;
+        }
+
+        .mode-card {
+            background: var(--bg-input);
+            border: 2px solid var(--border-color);
+            padding: var(--space-l);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .mode-card:hover {
+            border-color: var(--accent-orange);
+        }
+
+        .mode-card.selected {
+            border-color: var(--accent-orange);
+            background: var(--bg-panel);
+        }
+
+        .mode-card h4 {
+            margin-bottom: var(--space-s);
+        }
+
+        .mode-card p {
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .prompt-box {
+            background: #1a1a0a;
+            border: 1px solid #444;
+            padding: var(--space-m);
+            margin: var(--space-m) 0;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: var(--space-s);
+            flex-wrap: wrap;
+            margin-top: var(--space-m);
+        }
+
+        .status-bar {
+            background: var(--bg-input);
+            padding: var(--space-s) var(--space-m);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-mute);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--border-color);
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            margin-right: 4px;
+        }
+
+        .tag.success {
+            background: var(--accent-green);
+            color: #fff;
+        }
+
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: var(--space-m);
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-mute);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-m);
+        }
+
+        @media (max-width: 600px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .mode-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="brand">
+                <div class="brand-logo"></div>
+                <h3>IP-DIRECTOR-OS</h3>
+            </div>
+            <div>
+                <button class="btn btn-ghost btn-sm" onclick="app.exportData()"><i data-lucide="download"
+                        style="width:14px"></i> 导出</button>
+                <button class="btn btn-ghost btn-sm" onclick="app.resetData()"><i data-lucide="refresh-cw"
+                        style="width:14px"></i> 重置</button>
+            </div>
+        </header>
+
+        <nav id="mainNav">
+            <button class="nav-item active" data-step="0">00 总控</button>
+            <button class="nav-item" data-step="1">01 人设</button>
+            <button class="nav-item" data-step="2">02 风格</button>
+            <button class="nav-item" data-step="3">03 长文</button>
+            <button class="nav-item" data-step="4">04 朋友圈</button>
+            <button class="nav-item" data-step="5">05 海报</button>
+            <button class="nav-item" data-step="6">06 资产</button>
+        </nav>
+
+        <main>
+            <!-- Step 0: Dashboard -->
+            <section id="step-0" class="section active">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div><span class="panel-subtitle">System Overview</span>
+                            <h2>总控台</h2>
+                        </div>
+                        <div style="text-align:right"><span class="panel-subtitle">IP Name</span>
+                            <h3 id="disp-name">未命名</h3>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div>
+                            <label>人设档案</label>
+                            <div id="dash-profile" class="result-box" style="min-height:100px;max-height:150px;">未创建
+                            </div>
+                        </div>
+                        <div>
+                            <label>风格DNA</label>
+                            <div id="dash-style" class="result-box" style="min-height:100px;max-height:150px;">未定义</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:var(--space-m)">💡 从 <strong>01 人设</strong> 开始，逐步完成 6 个模块</p>
+                </div>
+            </section>
+
+            <!-- Step 1: IP Mining -->
+            <section id="step-1" class="section">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div><span class="panel-subtitle">Module 01</span>
+                            <h2>IP 人设挖掘</h2>
+                        </div>
+                    </div>
+                    <div id="step1-mode" class="mode-cards">
+                        <div class="mode-card" data-mode="feed">
+                            <h4>📋 投喂模式</h4>
+                            <p>直接粘贴简历或介绍</p>
+                        </div>
+                        <div class="mode-card" data-mode="interview">
+                            <h4>🎤 采访模式</h4>
+                            <p>通过问答深度挖掘</p>
+                        </div>
+                    </div>
+                    <div id="step1-feed" class="hidden">
+                        <div class="form-group"><label>粘贴你的个人介绍/简历</label><textarea id="in-feed"
+                                placeholder="职业经历、擅长领域、价值观、高光时刻..."></textarea></div>
+                        <button class="btn btn-primary" onclick="app.generateProfile('feed')">生成人设档案</button>
+                    </div>
+                    <div id="step1-interview" class="hidden">
+                        <div class="form-group"><label id="q-label">问题 1/5</label>
+                            <p id="q-text" style="font-size:1.1rem;color:var(--text-main)"></p><textarea id="in-answer"
+                                placeholder="请回答..."></textarea>
+                        </div>
+                        <div class="action-bar"><button class="btn" onclick="app.prevQ()" id="btn-prev-q"
+                                disabled>上一题</button><button class="btn btn-primary" onclick="app.nextQ()"
+                                id="btn-next-q">下一题</button></div>
+                    </div>
+                    <div id="step1-result" class="hidden">
+                        <label>生成的 Prompt（复制到 AI 对话）</label>
+                        <div class="prompt-box" id="prompt-profile"></div>
+                        <div class="action-bar"><button class="btn" onclick="app.copyText('prompt-profile')">📋 复制
+                                Prompt</button></div>
+                        <label style="margin-top:var(--space-m)">AI 返回结果（粘贴到这里保存）</label>
+                        <textarea id="in-profile-result" placeholder="粘贴 AI 生成的人设档案..."></textarea>
+                        <div class="action-bar"><button class="btn btn-success" onclick="app.saveProfile()">✓
+                                保存人设档案</button></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2: Style -->
+            <section id="step-2" class="section">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div><span class="panel-subtitle">Module 02</span>
+                            <h2>风格定制</h2>
+                        </div>
+                    </div>
+                    <div id="step2-mode" class="mode-cards">
+                        <div class="mode-card" data-mode="sample">
+                            <h4>📄 样文分析</h4>
+                            <p>提供喜欢的文章</p>
+                        </div>
+                        <div class="mode-card" data-mode="describe">
+                            <h4>💭 描述风格</h4>
+                            <p>用文字描述风格</p>
+                        </div>
+                        <div class="mode-card" data-mode="preset">
+                            <h4>🎭 预设选择</h4>
+                            <p>选择预设风格</p>
+                        </div>
+                    </div>
+                    <div id="step2-sample" class="hidden">
+                        <div class="form-group"><label>粘贴样文</label><textarea id="in-sample"
+                                placeholder="粘贴一篇你喜欢的文章..."></textarea></div>
+                        <button class="btn btn-primary" onclick="app.generateStyle('sample')">分析风格</button>
+                    </div>
+                    <div id="step2-describe" class="hidden">
+                        <div class="form-group"><label>描述风格</label><textarea id="in-describe"
+                                placeholder="例如：犀利的毒舌评论家 / 温暖的邻家大姐姐..."></textarea></div>
+                        <button class="btn btn-primary" onclick="app.generateStyle('describe')">生成风格DNA</button>
+                    </div>
+                    <div id="step2-preset" class="hidden">
+                        <div class="mode-cards" id="preset-cards">
+                            <div class="mode-card" data-preset="sharp">
+                                <h4>🔪 手术刀犀利</h4>
+                                <p>一针见血、逻辑严密</p>
+                            </div>
+                            <div class="mode-card" data-preset="warm">
+                                <h4>☀️ 温暖治愈</h4>
+                                <p>共情力强、治愈人心</p>
+                            </div>
+                            <div class="mode-card" data-preset="pro">
+                                <h4>📊 专业权威</h4>
+                                <p>数据说话、逻辑缜密</p>
+                            </div>
+                            <div class="mode-card" data-preset="humor">
+                                <h4>😄 幽默接地气</h4>
+                                <p>段子频出、轻松有趣</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="step2-result" class="hidden">
+                        <label>生成的 Prompt</label>
+                        <div class="prompt-box" id="prompt-style"></div>
+                        <div class="action-bar"><button class="btn" onclick="app.copyText('prompt-style')">📋 复制
+                                Prompt</button></div>
+                        <label style="margin-top:var(--space-m)">AI 返回结果</label>
+                        <textarea id="in-style-result" placeholder="粘贴 AI 生成的风格DNA..."></textarea>
+                        <div class="action-bar"><button class="btn btn-success" onclick="app.saveStyle()">✓
+                                保存风格DNA</button></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3: Long Form -->
+            <section id="step-3" class="section">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div><span class="panel-subtitle">Module 03</span>
+                            <h2>长文写作</h2>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>输入选题</label><textarea id="in-topic"
+                            placeholder="例如：为什么90%的创业者都在假装努力"></textarea></div>
+                    <button class="btn btn-primary" onclick="app.generateArticle()">生成写作 Prompt</button>
+                    <div id="step3-result" class="hidden">
+                        <label style="margin-top:var(--space-m)">Step 1: 大纲 Prompt</label>
+                        <div class="prompt-box" id="prompt-outline"></div>
+                        <div class="action-bar"><button class="btn" onclick="app.copyText('prompt-outline')">📋
+                                复制</button></div>
+                        <label style="margin-top:var(--space-m)">确认后的大纲（可编辑）</label>
+                        <textarea id="in-outline" placeholder="粘贴 AI 生成的大纲，确认或修改后继续..."></textarea>
+                        <button class="btn btn-primary" onclick="app.generateFullArticle()">生成全文 Prompt</button>
+                        <div id="prompt-article-box" class="hidden">
+                            <label style="margin-top:var(--space-m)">Step 2: 全文 Prompt</label>
+                            <div class="prompt-box" id="prompt-article"></div>
+                            <div class="action-bar"><button class="btn" onclick="app.copyText('prompt-article')">📋
+                                    复制</button></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: Moments -->
+            <section id="step-4" class="section">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div><span class="panel-subtitle">Module 04</span>
+                            <h2>朋友圈文案</h2>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>输入内容（长文或主题）</label><textarea id="in-moments"
+                            placeholder="粘贴文章或输入主题关键词..."></textarea></div>
+                    <div class="form-group"><label>选择类型</label>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+                            <label style="font-size:0.85rem"><input type="checkbox" value="quote" checked> 金句型</label>
+                            <label style="font-size:0.85rem"><input type="checkbox" value="story" checked> 故事型</label>
+                            <label style="font-size:0.85rem"><input type="checkbox" value="tips" checked> 干货型</label>
+                            <label style="font-size:0.85rem"><input type="checkbox" value="pain" checked> 痛点型</label>
+                            <label style="font-size:0.85rem"><input type="checkbox" value="interact" checked>
+                                互动型</label>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="app.generateMoments()">生成朋友圈 Prompt</button>
+                    <div id="step4-result" class="hidden">
+                        <label style="margin-top:var(--space-m)">Prompt</label>
+                        <div class="prompt-box" id="prompt-moments"></div>
+                        <div class="action-bar"><button class="btn" onclick="app.copyText('prompt-moments')">📋 复制
+                                Prompt</button></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 5: Poster -->
+            <section id="step-5" class="section">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div><span class="panel-subtitle">Module 05</span>
+                            <h2>引流海报</h2>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group"><label>海报类型</label><select id="in-poster-type">
+                                <option value="lead">干货引流</option>
+                                <option value="event">活动报名</option>
+                                <option value="ip">个人IP</option>
+                                <option value="course">课程产品</option>
+                            </select></div>
+                        <div class="form-group"><label>主题名称</label><input type="text" id="in-poster-title"
+                                placeholder="如：7天掌握私域运营"></div>
+                    </div>
+                    <div class="form-group"><label>核心卖点（每行一个）</label><textarea id="in-poster-points"
+                            placeholder="可复制粘贴的资料&#10;一对一答疑&#10;实战案例拆解"></textarea></div>
+                    <div class="form-group"><label>目标人群</label><input type="text" id="in-poster-audience"
+                            placeholder="如：想做自媒体的职场人"></div>
+                    <button class="btn btn-primary" onclick="app.generatePoster()">生成海报 Prompt</button>
+                    <div id="step5-result" class="hidden">
+                        <label style="margin-top:var(--space-m)">Prompt</label>
+                        <div class="prompt-box" id="prompt-poster"></div>
+                        <div class="action-bar"><button class="btn" onclick="app.copyText('prompt-poster')">📋 复制
+                                Prompt</button></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 6: Assets -->
+            <section id="step-6" class="section">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div><span class="panel-subtitle">Module 06</span>
+                            <h2>交付资产</h2>
+                        </div>
+                    </div>
+                    <div class="mode-cards" id="step6-type">
+                        <div class="mode-card selected" data-type="questions">
+                            <h4>📋 30个核心问题</h4>
+                            <p>引流福利清单</p>
+                        </div>
+                        <div class="mode-card" data-type="manual">
+                            <h4>📦 服务手册</h4>
+                            <p>服务交付文档</p>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>服务/产品名称</label><input type="text" id="in-service-name"
+                            placeholder="如：个人IP定位咨询"></div>
+                    <div id="manual-fields" class="hidden">
+                        <div class="form-group"><label>服务流程</label><textarea id="in-service-flow"
+                                placeholder="1. 初次沟通&#10;2. 深度访谈&#10;3. 方案交付"></textarea></div>
+                        <div class="form-group"><label>定价方案</label><textarea id="in-pricing"
+                                placeholder="基础版：¥999&#10;进阶版：¥2999"></textarea></div>
+                    </div>
+                    <button class="btn btn-primary" onclick="app.generateAssets()">生成资产 Prompt</button>
+                    <div id="step6-result" class="hidden">
+                        <label style="margin-top:var(--space-m)">Prompt</label>
+                        <div class="prompt-box" id="prompt-assets"></div>
+                        <div class="action-bar"><button class="btn" onclick="app.copyText('prompt-assets')">📋 复制
+                                Prompt</button></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>IP-DIRECTOR-OS v2.0 | LOCAL STORAGE ACTIVE</p>
+        </footer>
+    </div>
+
+    <script>
+        const PROMPTS = {
+            profileSystem: `# Role: 顶级个人IP商业战略顾问
+
+你是一位精通互联网商业变现逻辑与个人品牌心理学的战略专家。
+
+## 任务
+将用户提供的素材重塑为【七维人设档案】。
+
+## 原则
+1. 拒绝平庸标签，打造独特记忆点
+2. 变现导向，考虑商业价值
+3. 受众思维，击中痛点
+
+## 输出格式
+### 1️⃣ 身份标签
+### 2️⃣ 价值标签  
+### 3️⃣ 性格标签
+### 4️⃣ 一句话黄金介绍
+### 5️⃣ 杀手级Slogan (10字以内)
+### 6️⃣ 目标受众画像
+### 7️⃣ 内容方向建议`,
+
+            interviewQs: [
+                "你目前的职业是什么？用一句话介绍自己？",
+                "职业生涯中最骄傲的「高光时刻」或「代表作」？",
+                "你最擅长解决什么问题？身边人遇到什么会找你？",
+                "如果有人付费向你学习，你能教什么独特的东西？",
+                "描述你理想中的客户：他们是谁？有什么困扰？"
+            ],
+
+            styleSystem: `# Role: 写作风格分析专家
+
+分析用户提供的样文或描述，生成【风格DNA档案】。
+
+## 输出格式
+### 🎭 风格人格 (3个形容词)
+### 📝 语感特征 (句式、节奏、标点)
+### 💬 常用表达 (口头禅、开场、收尾)
+### 🎨 情绪基调
+### 🔧 写作禁忌
+### 📌 模仿要点 (3条)`,
+
+            presetStyles: {
+                sharp: "手术刀式犀利：一针见血、逻辑严密、不留情面。短句为主，多反问，直接抛观点。",
+                warm: "温暖治愈系：共情力强、娓娓道来、陪伴感。长短句结合，先共情再建议。",
+                pro: "专业权威派：数据说话、逻辑缜密。长句复合句，善用框架模型。",
+                humor: "幽默接地气：段子手、比喻生动。短句口语化，善用反差反转。"
+            },
+
+            momentsTypes: {
+                quote: "金句型：提取最有力的一句话开场，简短有力，结尾引导评论",
+                story: "故事型：用案例故事切入，制造好奇，留悬念引导评论",
+                tips: "干货型：提炼核心方法论，数字列表呈现，引导私聊获取完整版",
+                pain: "痛点型：直击痛点，反问扎心，暗示能解决问题",
+                interact: "互动型：抛话题投票，邀请讨论"
+            }
+        };
+
+        const app = {
+            data: { profile: '', style: '', currentQ: 0, answers: [], assetType: 'questions' },
+
+            init() {
+                this.loadData();
+                this.bindEvents();
+                this.render();
+                lucide.createIcons();
+            },
+
+            bindEvents() {
+                document.querySelectorAll('.nav-item').forEach(btn => {
+                    btn.addEventListener('click', e => {
+                        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                        e.target.classList.add('active');
+                        document.getElementById('step-' + e.target.dataset.step).classList.add('active');
+                    });
+                });
+
+                document.querySelectorAll('#step1-mode .mode-card').forEach(card => {
+                    card.addEventListener('click', e => {
+                        const mode = card.dataset.mode;
+                        document.getElementById('step1-mode').classList.add('hidden');
+                        document.getElementById('step1-' + mode).classList.remove('hidden');
+                        if (mode === 'interview') { app.data.currentQ = 0; app.data.answers = []; app.showQuestion(); }
+                    });
+                });
+
+                document.querySelectorAll('#step2-mode .mode-card').forEach(card => {
+                    card.addEventListener('click', e => {
+                        const mode = card.dataset.mode;
+                        document.getElementById('step2-mode').classList.add('hidden');
+                        document.getElementById('step2-' + mode).classList.remove('hidden');
+                    });
+                });
+
+                document.querySelectorAll('#preset-cards .mode-card').forEach(card => {
+                    card.addEventListener('click', e => {
+                        document.querySelectorAll('#preset-cards .mode-card').forEach(c => c.classList.remove('selected'));
+                        card.classList.add('selected');
+                        const preset = card.dataset.preset;
+                        const prompt = `请为以下风格描述生成详细的【风格DNA档案】：\n\n${PROMPTS.presetStyles[preset]}\n\n${PROMPTS.styleSystem}`;
+                        document.getElementById('prompt-style').textContent = prompt;
+                        document.getElementById('step2-result').classList.remove('hidden');
+                    });
+                });
+
+                document.querySelectorAll('#step6-type .mode-card').forEach(card => {
+                    card.addEventListener('click', e => {
+                        document.querySelectorAll('#step6-type .mode-card').forEach(c => c.classList.remove('selected'));
+                        card.classList.add('selected');
+                        app.data.assetType = card.dataset.type;
+                        document.getElementById('manual-fields').classList.toggle('hidden', card.dataset.type !== 'manual');
+                    });
+                });
+            },
+
+            showQuestion() {
+                const q = this.data.currentQ;
+                document.getElementById('q-label').textContent = `问题 ${q + 1}/5`;
+                document.getElementById('q-text').textContent = PROMPTS.interviewQs[q];
+                document.getElementById('in-answer').value = this.data.answers[q] || '';
+                document.getElementById('btn-prev-q').disabled = q === 0;
+                document.getElementById('btn-next-q').textContent = q === 4 ? '生成档案' : '下一题';
+            },
+
+            prevQ() {
+                this.data.answers[this.data.currentQ] = document.getElementById('in-answer').value;
+                this.data.currentQ--;
+                this.showQuestion();
+            },
+
+            nextQ() {
+                this.data.answers[this.data.currentQ] = document.getElementById('in-answer').value;
+                if (this.data.currentQ < 4) { this.data.currentQ++; this.showQuestion(); }
+                else { this.generateProfile('interview'); }
+            },
+
+            generateProfile(mode) {
+                let content = '';
+                if (mode === 'feed') { content = document.getElementById('in-feed').value; }
+                else { content = this.data.answers.map((a, i) => `Q${i + 1}: ${PROMPTS.interviewQs[i]}\nA: ${a}`).join('\n\n'); }
+
+                const prompt = `${PROMPTS.profileSystem}\n\n---\n\n【用户素材】\n${content}`;
+                document.getElementById('prompt-profile').textContent = prompt;
+                document.getElementById('step1-result').classList.remove('hidden');
+                if (mode === 'interview') document.getElementById('step1-interview').classList.add('hidden');
+            },
+
+            saveProfile() {
+                this.data.profile = document.getElementById('in-profile-result').value;
+                this.saveData();
+                this.render();
+                alert('✓ 人设档案已保存');
+            },
+
+            generateStyle(mode) {
+                let content = '';
+                if (mode === 'sample') content = `【样文】\n${document.getElementById('in-sample').value}`;
+                else content = `【风格描述】\n${document.getElementById('in-describe').value}`;
+
+                const prompt = `${PROMPTS.styleSystem}\n\n---\n\n${content}`;
+                document.getElementById('prompt-style').textContent = prompt;
+                document.getElementById('step2-result').classList.remove('hidden');
+            },
+
+            saveStyle() {
+                this.data.style = document.getElementById('in-style-result').value;
+                this.saveData();
+                this.render();
+                alert('✓ 风格DNA已保存');
+            },
+
+            generateArticle() {
+                const topic = document.getElementById('in-topic').value;
+                const prompt = `你是一位擅长写爆款文章的内容策划师。
+
+【用户人设】
+${this.data.profile || '(未设置)'}
+
+【写作风格】
+${this.data.style || '(未设置)'}
+
+【选题】
+${topic}
+
+请生成文章大纲：
+1. 3个备选标题
+2. 开篇钩子设计
+3. 正文结构（3-5个部分，每部分核心观点+支撑案例）
+4. 结尾设计`;
+
+                document.getElementById('prompt-outline').textContent = prompt;
+                document.getElementById('step3-result').classList.remove('hidden');
+            },
+
+            generateFullArticle() {
+                const outline = document.getElementById('in-outline').value;
+                const prompt = `你是一位顶级内容创作者。
+
+【用户人设】
+${this.data.profile || '(未设置)'}
+
+【写作风格】
+${this.data.style || '(未设置)'}
+
+【确认的大纲】
+${outline}
+
+请根据大纲撰写完整文章。要求：
+1. 严格遵循风格DNA
+2. 开篇强钩子，3秒抓住读者
+3. 段落清晰，每段一个核心观点
+4. 多用案例细节，少抽象概念
+5. 结尾有力，引发共鸣或行动`;
+
+                document.getElementById('prompt-article').textContent = prompt;
+                document.getElementById('prompt-article-box').classList.remove('hidden');
+            },
+
+            generateMoments() {
+                const content = document.getElementById('in-moments').value;
+                const types = [...document.querySelectorAll('#step-4 input:checked')].map(c => c.value);
+                const typeDesc = types.map(t => PROMPTS.momentsTypes[t]).join('\n');
+
+                const prompt = `你是一位资深私域运营专家，擅长写高互动朋友圈文案。
+
+【用户人设】
+${this.data.profile || '(未设置)'}
+
+【写作风格】
+${this.data.style || '(未设置)'}
+
+【原始内容】
+${content}
+
+请生成以下类型的朋友圈文案（每条100-200字）：
+${typeDesc}
+
+要求：
+- 第一句必须抓住注意力
+- 像朋友聊天，口语化
+- 每条结尾有互动引导`;
+
+                document.getElementById('prompt-moments').textContent = prompt;
+                document.getElementById('step4-result').classList.remove('hidden');
+            },
+
+            generatePoster() {
+                const type = document.getElementById('in-poster-type').value;
+                const title = document.getElementById('in-poster-title').value;
+                const points = document.getElementById('in-poster-points').value;
+                const audience = document.getElementById('in-poster-audience').value;
+
+                const prompt = `你是一位视觉营销专家，擅长设计高转化引流海报。
+
+【用户人设】
+${this.data.profile || '(未设置)'}
+
+【海报类型】${type}
+【主题】${title}
+【核心卖点】\n${points}
+【目标人群】${audience}
+
+请生成完整海报方案：
+
+## 一、文案内容
+1. 主标题（6-12字，直击利益点）
+2. 副标题（补充说明或紧迫感）
+3. 核心卖点（3-5条，用✓列表）
+4. 信任背书
+5. 行动指令 + 紧迫感
+6. 二维码引导语
+
+## 二、设计指导
+- 配色方案（主色、辅色、强调色 + HEX值）
+- 布局结构
+- 字体建议
+
+## 三、AI绘图指令
+Midjourney Prompt:
+DALL-E 3 Prompt:`;
+
+                document.getElementById('prompt-poster').textContent = prompt;
+                document.getElementById('step5-result').classList.remove('hidden');
+            },
+
+            generateAssets() {
+                const name = document.getElementById('in-service-name').value;
+                let prompt = '';
+
+                if (this.data.assetType === 'questions') {
+                    prompt = `【用户人设】\n${this.data.profile || '(未设置)'}\n\n【服务名称】${name}\n\n请生成《30个核心问题清单》作为引流福利：
+            
+要求：
+1. 问题直击目标受众痛点
+2. 从入门到进阶有层次
+3. 每个问题附简短价值说明
+4. 最后3个引导付费咨询
+
+格式：
+# ${name} | 30个核心问题清单
+
+## 入门篇（1-10）
+1. [问题] → 为什么重要：[说明]
+
+## 进阶篇（11-20）
+
+## 高阶篇（21-30）`;
+                } else {
+                    const flow = document.getElementById('in-service-flow').value;
+                    const pricing = document.getElementById('in-pricing').value;
+                    prompt = `【用户人设】\n${this.data.profile || '(未设置)'}\n\n【服务名称】${name}\n【服务流程】\n${flow}\n【定价】\n${pricing}\n\n请生成《服务交付手册》：
+
+格式：
+# ${name} | 服务交付手册
+
+## 一、服务概述
+## 二、服务对象
+## 三、服务流程（分阶段，含时间、内容、交付物）
+## 四、套餐与定价（表格）
+## 五、服务保障
+## 六、常见问题 Q&A
+## 七、如何开始`;
+                }
+
+                document.getElementById('prompt-assets').textContent = prompt;
+                document.getElementById('step6-result').classList.remove('hidden');
+            },
+
+            copyText(id) {
+                const text = document.getElementById(id).textContent;
+                navigator.clipboard.writeText(text).then(() => alert('✓ 已复制到剪贴板'));
+            },
+
+            saveData() { localStorage.setItem('ip-director-os', JSON.stringify(this.data)); },
+            loadData() { const d = localStorage.getItem('ip-director-os'); if (d) this.data = { ...this.data, ...JSON.parse(d) }; },
+
+            exportData() {
+                const blob = new Blob([JSON.stringify(this.data, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+                a.download = 'ip-director-data.json'; a.click();
+            },
+
+            resetData() {
+                if (confirm('确定重置所有数据？')) { localStorage.removeItem('ip-director-os'); location.reload(); }
+            },
+
+            render() {
+                document.getElementById('disp-name').textContent = this.data.profile ? '已就绪' : '未命名';
+                document.getElementById('dash-profile').textContent = this.data.profile || '未创建';
+                document.getElementById('dash-style').textContent = this.data.style || '未定义';
+
+                // Mark completed steps
+                if (this.data.profile) document.querySelector('[data-step="1"]').classList.add('done');
+                if (this.data.style) document.querySelector('[data-step="2"]').classList.add('done');
+            }
+        };
+
+        app.init();
+    </script>
+</body>
+
+</html>
